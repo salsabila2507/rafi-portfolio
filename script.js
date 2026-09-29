@@ -98,21 +98,32 @@
 
   revealTargets.forEach(function (el) { el.classList.add("reveal"); });
 
+  function show(el) {
+    el.classList.add("is-visible");
+    window.setTimeout(function () {
+      if (parseFloat(getComputedStyle(el).opacity) < 0.9) {
+        el.classList.add("reveal-done");
+      }
+    }, 1500);
+  }
+
   if ("IntersectionObserver" in window && !reduceMotion) {
     var revealObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-visible");
+        show(entry.target);
         revealObserver.unobserve(entry.target);
       });
     }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
 
     revealTargets.forEach(function (el, i) {
-      el.style.transitionDelay = (i % 4) * 70 + "ms";
+      el.style.animationDelay = (i % 4) * 70 + "ms";
       revealObserver.observe(el);
     });
   } else {
-    revealTargets.forEach(function (el) { el.classList.add("is-visible"); });
+    revealTargets.forEach(function (el) {
+      el.classList.add("is-visible", "reveal-done");
+    });
   }
 
   /* ---------- animated counters ---------- */
