@@ -466,3 +466,17 @@ body > *:not(#bubble-canvas):not(.sunbeams){ position:relative; z-index:1; }
 }
 
 :focus-visible{ outline:3px solid var(--krabby); outline-offset:3px; border-radius:8px; }
+
+/* ---------- live stats line ---------- */
+.live-line{
+  margin:-4px 0 26px; display:flex; align-items:center; gap:9px;
+  font-size:.86rem; font-weight:800; letter-spacing:.4px;
+  text-transform:uppercase; color:#9fd8f7;
+}
+.live-pip{
+  width:9px; height:9px; border-radius:50%; background:var(--pine);
+  box-shadow:0 0 0 0 rgba(53,197,138,.6);
+  animation:pulse-live 2s ease-out infinite;
+}
+@keyframes pulse-live{ 70%{ box-shadow:0 0 0 11px rgba(53,197,138,0);} 100%{ box-shadow:0 0 0 0 rgba(53,197,138,0);} }
+.live-line [data-live-at]{ color:#cdeeff; text-transform:none; letter-spacing:0; font-weight:700; }

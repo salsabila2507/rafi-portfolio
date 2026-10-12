@@ -182,6 +182,39 @@
     });
   }
 
+  /* ---------- live stats from data/stats.json ---------- */
+  (function liveStats() {
+    var stamp = document.querySelector("[data-live-at]");
+    var nodes = document.querySelectorAll("[data-live]");
+    if (!nodes.length) return;
+
+    function say(msg) { if (stamp) stamp.textContent = msg; }
+
+    fetch("data/stats.json?t=" + Date.now(), { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(0); })
+      .then(function (d) {
+        if (!d) return;
+        nodes.forEach(function (node) {
+          var key = node.getAttribute("data-live");
+          var val = d[key];
+          if (typeof val !== "number" || !val) return;
+          node.setAttribute("data-count", String(val));
+          node.textContent =
+            val.toLocaleString("en-US") + (node.getAttribute("data-suffix") || "");
+        });
+        if (d.updatedAt && d.source && d.source !== "seed") {
+          var t = new Date(d.updatedAt);
+          say("updated " + t.toLocaleString("en-US", {
+            month: "short", day: "numeric",
+            hour: "2-digit", minute: "2-digit", timeZone: "UTC"
+          }) + " UTC");
+        } else {
+          say("showing last known numbers");
+        }
+      })
+      .catch(function () { say("showing last known numbers"); });
+  })();
+
   /* ---------- footer year ---------- */
   var yearEl = document.querySelector("[data-year]");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
